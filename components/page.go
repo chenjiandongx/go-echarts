@@ -30,6 +30,22 @@ type Page struct {
 	Layout Layout
 }
 
+type PageOpts func(p *Page)
+
+func (p *Page) SetPageOptions(opts ...PageOpts) *Page {
+	for _, opt := range opts {
+		opt(p)
+	}
+	return p
+}
+
+func WithInitializationOpts(opt opts.Initialization) PageOpts {
+	return func(p *Page) {
+		p.Initialization = opt
+		p.Initialization.Validate()
+	}
+}
+
 // NewPage creates a new page.
 func NewPage() *Page {
 	page := &Page{}
